@@ -1,0 +1,60 @@
+From 4fbcd9887b74ac0c9621fcbb02d46dd7ab9eee24 Mon Sep 17 00:00:00 2001
+From: Mnauiinecek <rick62275@gmail.com>
+Date: Thu, 10 Sep 2026 00:32:04 +0000
+Subject: [PATCH] Revert "Prevent SQL injection in SelectionBuilder"
+
+This reverts commit 5e148909026a11983a9a1bfd1889798f62308b99.
+---
+ .../contacts/util/SelectionBuilder.java         |  2 --
+ .../contacts/util/SelectionBuilderTest.java     | 17 -----------------
+ 2 files changed, 19 deletions(-)
+
+diff --git a/src/com/android/providers/contacts/util/SelectionBuilder.java b/src/com/android/providers/contacts/util/SelectionBuilder.java
+index e21e2e29..14499e8b 100644
+--- a/src/com/android/providers/contacts/util/SelectionBuilder.java
++++ b/src/com/android/providers/contacts/util/SelectionBuilder.java
+@@ -16,7 +16,6 @@
+ 
+ package com.android.providers.contacts.util;
+ 
+-import android.database.sqlite.SQLiteTokenizer;
+ import android.text.TextUtils;
+ 
+ import java.util.ArrayList;
+@@ -45,7 +44,6 @@ public class SelectionBuilder {
+      */
+     public SelectionBuilder addClause(String clause) {
+         if (!TextUtils.isEmpty(clause)) {
+-            SQLiteTokenizer.tokenize(clause, SQLiteTokenizer.OPTION_CHECK_BRACKETS, null);
+             mWhereClauses.add(clause);
+         }
+         return this;
+diff --git a/tests/src/com/android/providers/contacts/util/SelectionBuilderTest.java b/tests/src/com/android/providers/contacts/util/SelectionBuilderTest.java
+index 5d96c902..06f7e297 100644
+--- a/tests/src/com/android/providers/contacts/util/SelectionBuilderTest.java
++++ b/tests/src/com/android/providers/contacts/util/SelectionBuilderTest.java
+@@ -54,21 +54,4 @@ public class SelectionBuilderTest extends FixedAndroidTestCase {
+         assertEquals("(A)", new SelectionBuilder("").addClause("A").build());
+         assertEquals("(A) AND (B)", new SelectionBuilder("A").addClause("B").build());
+     }
+-
+-    public void testInjection() {
+-        try {
+-            new SelectionBuilder("1=1)) OR ((1=1");
+-            fail("Should have thrown");
+-        } catch (IllegalArgumentException expected) {
+-            // expected
+-        }
+-
+-        try {
+-            SelectionBuilder sb = new SelectionBuilder("A");
+-            sb.addClause("1=1)) OR ((1=1");
+-            fail("Should have thrown");
+-        } catch (IllegalArgumentException expected) {
+-            // expected
+-        }
+-    }
+ }
+-- 
+2.55.0
+
