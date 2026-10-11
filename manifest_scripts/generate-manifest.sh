@@ -17,7 +17,7 @@
 top_dir=`pwd`
 LOCALDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 loc_man="${top_dir}/.repo/local_manifests"
-manifests_url="https://raw.githubusercontent.com/WayDroid-ATV/android_vendor_waydroid/lineage-24.0/manifest_scripts/manifests"
+manifests_url="https://raw.githubusercontent.com/Mnauiinecek/android_vendor_waydroid/lineage-24.0/manifest_scripts/manifests"
 manifests_path="${LOCALDIR}/manifests"
 
 #setup colors
